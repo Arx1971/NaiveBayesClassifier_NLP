@@ -74,20 +74,23 @@ def probability_method(test_files, neg_vocabulary, pos_vocabulary, filepath, tra
                        total_pos_train_file):
     neg_counter_nr = 0
     pos_counter_nr = 0
+    sum_of_pos_file = sum_of_values(pos_vocabulary)
+    sum_of_neg_file = sum_of_values(neg_vocabulary)
     total_train_file = total_neg_train_file + total_pos_train_file
+    len_of_train = len(training_vocabulary)
     for i in range(0, len(test_files)):
         neg_class_prob = naive_byes_classifier_bag_of_words_model(neg_vocabulary,
                                                                   filepath,
                                                                   test_files[i],
-                                                                  sum_of_values(neg_vocabulary),
-                                                                  len(training_vocabulary)) + math.log(float(
+                                                                  sum_of_neg_file,
+                                                                  len_of_train) + math.log(float(
             total_neg_train_file / total_train_file), 2)
 
         pos_class_prob = naive_byes_classifier_bag_of_words_model(pos_vocabulary,
                                                                   filepath,
                                                                   test_files[i],
-                                                                  sum_of_values(pos_vocabulary),
-                                                                  len(training_vocabulary)) + math.log(float(
+                                                                  sum_of_pos_file,
+                                                                  len_of_train) + math.log(float(
             total_pos_train_file / total_train_file), 2)
 
         if pos_class_prob > neg_class_prob:

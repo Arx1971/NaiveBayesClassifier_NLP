@@ -5,7 +5,7 @@ from collections import Counter
 from string import punctuation
 from pre_process import *
 import math
-
+import datetime
 
 # args = sys.argv[1].split()
 # train_file = args[0]
@@ -14,6 +14,8 @@ import math
 #
 # print(train_file, test_file, train_write_file)
 # print(os.path.isdir())
+
+FILE = open('mega_file.txt', "w+")
 
 
 def naive_byes_classifier_bag_of_words_model(vocabulary, filepath, test_review, number_of_word_in_class,
@@ -78,20 +80,22 @@ def probability_method(test_files, neg_vocabulary, pos_vocabulary, filepath, tra
                                                                   filepath,
                                                                   test_files[i],
                                                                   sum_of_values(neg_vocabulary),
-                                                                  len(training_vocabulary)) * float(
-            total_neg_train_file / total_train_file)
+                                                                  len(training_vocabulary)) + math.log(float(
+            total_neg_train_file / total_train_file), 2)
 
         pos_class_prob = naive_byes_classifier_bag_of_words_model(pos_vocabulary,
                                                                   filepath,
                                                                   test_files[i],
                                                                   sum_of_values(pos_vocabulary),
-                                                                  len(training_vocabulary)) * float(
-            total_pos_train_file / total_train_file)
+                                                                  len(training_vocabulary)) + math.log(float(
+            total_pos_train_file / total_train_file), 2)
 
         if pos_class_prob > neg_class_prob:
             pos_counter_nr += 1
+            FILE.write(test_files[i] + " Document Belong to test Negative: " + str(pos_class_prob) + "\n")
         else:
             neg_counter_nr += 1
+            FILE.write(test_files[i] + " Document Belong to test Positive: " + str(neg_class_prob) + "\n")
 
     return neg_counter_nr, pos_counter_nr
 
@@ -108,45 +112,40 @@ def naive_byes_classifier():
     total_neg_train_file = len(training_neg_file_name)
     total_pos_train_file = len(training_pos_file_name)
 
+    FILE.write("Process Test Negative Reviews\n")
     neg_test_arr = probability_method(test_neg_file_name, neg_vocabulary, pos_vocabulary,
                                       "movie-review-HW2/aclImdb/test/neg/", training_vocabulary,
                                       total_neg_train_file, total_pos_train_file)
     print("Total Number of negative review in neg class: ", neg_test_arr[0], "Probability: ",
           float(neg_test_arr[0] / total_neg_train_file))
+
+    FILE.write("Total Number of negative review in neg class: " + str(neg_test_arr[0]) + " Probability: " +
+               str(float(neg_test_arr[0] / total_pos_train_file)) + "\n")
+
     print("Total Number of positive review in neg class: ", neg_test_arr[1], "Probability: ",
           float(neg_test_arr[1] / total_neg_train_file))
+
+    FILE.write("Total Number of positive review in neg class: " + str(neg_test_arr[1]) + " Probability: " +
+               str(float(neg_test_arr[1] / total_pos_train_file)) + "\n")
+
+    FILE.write("Process Test Positive Reviews\n")
     pos_test_arr = probability_method(test_pos_file_name, neg_vocabulary, pos_vocabulary,
                                       "movie-review-HW2/aclImdb/test/pos/", training_vocabulary,
                                       total_neg_train_file, total_pos_train_file)
     print("Total Number of negative review in pos class: ", pos_test_arr[0], "Probability: ",
           float(pos_test_arr[0] / total_pos_train_file))
+
+    FILE.write("Total Number of positive review in pos class: " + str(pos_test_arr[0]) + " Probability: " +
+               str(float(pos_test_arr[0] / total_pos_train_file)) + "\n")
+
     print("Total Number of positive review in pos class: ", pos_test_arr[1], "Probability: ",
           float(pos_test_arr[1] / total_pos_train_file))
-    # neg_counter_nr = 0
-    # pos_counter_nr = 0
 
-    # for i in range(0, len(test_pos_file_name)):
-    #     neg_class_prob = naive_byes_classifier_bag_of_words_model(neg_vocabulary,
-    #                                                               'movie-review-HW2/aclImdb/test/pos/',
-    #                                                               test_pos_file_name[i],
-    #                                                               sum_of_values(neg_vocabulary),
-    #                                                               len(training_vocabulary)) + float(
-    #         total_neg_train_file / total_train_file)
-    #
-    #     pos_class_prob = naive_byes_classifier_bag_of_words_model(pos_vocabulary,
-    #                                                               'movie-review-HW2/aclImdb/test/pos/',
-    #                                                               test_pos_file_name[i],
-    #                                                               sum_of_values(pos_vocabulary),
-    #                                                               len(training_vocabulary)) + float(
-    #         total_pos_train_file / total_train_file)
-    #
-    #     if pos_class_prob > neg_class_prob:
-    #         pos_counter_nr += 1
-    #     else:
-    #         neg_counter_nr += 1
-    #
-    # print(neg_counter_nr, pos_counter_nr)
+    FILE.write("Total Number of positive review in pos class: " + str(pos_test_arr[1]) + " Probability: " +
+               str(float(pos_test_arr[1] / total_pos_train_file)))
 
 
 # small_training_corpus()
+a = datetime.datetime.now()
 naive_byes_classifier()
+print(datetime.datetime.now() - a)

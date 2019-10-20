@@ -52,15 +52,15 @@ def small_training_corpus():
                                                                  "small_corpus/test/",
                                                                  small_test_corpus[0],
                                                                  sum_of_values(small_action_corpus_vocabulary),
-                                                                 len(small_corpus_vocabulary)) + math.log(float(
-        total_action_training_files / total_number_of_training_files), 2)
+                                                                 len(small_corpus_vocabulary)) + math.log(
+        float(total_action_training_files / total_number_of_training_files), 2)
 
     comedy_class_prob = naive_byes_classifier_bag_of_words_model(small_comedy_corpus_vocabulary,
                                                                  "small_corpus/test/",
                                                                  small_test_corpus[0],
                                                                  sum_of_values(small_comedy_corpus_vocabulary),
-                                                                 len(small_corpus_vocabulary)) + math.log(float(
-        total_comedy_training_files / total_number_of_training_files), 2)
+                                                                 len(small_corpus_vocabulary)) + math.log(
+        float(total_comedy_training_files / total_number_of_training_files), 2)
 
     print("Probabilities for Action Class: ", action_class_prob)
     print("Probabilities for Comedy Class: ", comedy_class_prob)
@@ -83,15 +83,15 @@ def probability_method(test_files, neg_vocabulary, pos_vocabulary, filepath, tra
                                                                   filepath,
                                                                   test_files[i],
                                                                   sum_of_neg_file,
-                                                                  len_of_train) + math.log(float(
-            total_neg_train_file / total_train_file), 2)
+                                                                  len_of_train) + math.log(
+            float(total_neg_train_file / total_train_file), 2)
 
         pos_class_prob = naive_byes_classifier_bag_of_words_model(pos_vocabulary,
                                                                   filepath,
                                                                   test_files[i],
                                                                   sum_of_pos_file,
-                                                                  len_of_train) + math.log(float(
-            total_pos_train_file / total_train_file), 2)
+                                                                  len_of_train) + math.log(
+            float(total_pos_train_file / total_train_file), 2)
 
         if pos_class_prob > neg_class_prob:
             pos_counter_nr += 1
@@ -114,7 +114,10 @@ def naive_byes_classifier():
     training_vocabulary = merge_vocabulary(neg_vocabulary, pos_vocabulary)
     total_neg_train_file = len(training_neg_file_name)
     total_pos_train_file = len(training_pos_file_name)
-
+    file = open('vocabulary.txt', 'w+')
+    for keys, values in training_vocabulary.items():
+        file.write(keys + " " + str(values) + "\n")
+    file.close()
     FILE.write("Process Test Negative Reviews\n")
     neg_test_arr = probability_method(test_neg_file_name, neg_vocabulary, pos_vocabulary,
                                       "movie-review-HW2/aclImdb/test/neg/", training_vocabulary,

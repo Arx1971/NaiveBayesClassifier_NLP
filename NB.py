@@ -4,6 +4,7 @@ import re
 from collections import Counter
 from string import punctuation
 from pre_process import *
+import math
 
 
 # args = sys.argv[1].split()
@@ -17,7 +18,7 @@ from pre_process import *
 
 def naive_byes_classifier_bag_of_words_model(vocabulary, filepath, test_review, number_of_word_in_class,
                                              total_vocabulary_size):
-    prob = 1.0
+    prob = 0.0
     with open(filepath + test_review, "r") as reviews:
         review = reviews.read()
         review = re.sub(r'[`=~!@#$%^&*()_+\[\]{};\\:"|<,./<>?^]', ' ', review)
@@ -27,9 +28,9 @@ def naive_byes_classifier_bag_of_words_model(vocabulary, filepath, test_review, 
             word = word.strip(punctuation)
             word = word.strip()
             if word in vocabulary:
-                prob *= float((vocabulary[word] + 1) / (number_of_word_in_class + total_vocabulary_size))
+                prob += math.log(float((vocabulary[word] + 1) / (number_of_word_in_class + total_vocabulary_size)), 2)
             else:
-                prob *= float((1) / (number_of_word_in_class + total_vocabulary_size))
+                prob += math.log(float((1) / (number_of_word_in_class + total_vocabulary_size)), 2)
 
     return prob
 
@@ -49,15 +50,16 @@ def small_training_corpus():
                                                                  "small_corpus/test/",
                                                                  small_test_corpus[0],
                                                                  sum_of_values(small_action_corpus_vocabulary),
-                                                                 len(small_corpus_vocabulary)) * float(
-        total_action_training_files / total_number_of_training_files)
+                                                                 len(small_corpus_vocabulary)) + math.log(float(
+        total_action_training_files / total_number_of_training_files), 2)
 
     comedy_class_prob = naive_byes_classifier_bag_of_words_model(small_comedy_corpus_vocabulary,
                                                                  "small_corpus/test/",
                                                                  small_test_corpus[0],
                                                                  sum_of_values(small_comedy_corpus_vocabulary),
-                                                                 len(small_corpus_vocabulary)) * float(
-        total_comedy_training_files / total_number_of_training_files)
+                                                                 len(small_corpus_vocabulary)) + math.log(float(
+        total_comedy_training_files / total_number_of_training_files), 2)
+
     print("Probabilities for Action Class: ", action_class_prob)
     print("Probabilities for Comedy Class: ", comedy_class_prob)
     if action_class_prob > comedy_class_prob:
@@ -105,45 +107,45 @@ def naive_byes_classifier():
     training_vocabulary = merge_vocabulary(neg_vocabulary, pos_vocabulary)
     total_neg_train_file = len(training_neg_file_name)
     total_pos_train_file = len(training_pos_file_name)
-    total_train_file = len(training_neg_file_name) + len(training_pos_file_name)
 
-    # neg_test_arr = probability_method(test_neg_file_name, neg_vocabulary, pos_vocabulary,
-    #                                   "movie-review-HW2/aclImdb/test/neg/", training_vocabulary,
-    #                                   total_neg_train_file, total_pos_train_file)
-    # print("Total Number of negative review in neg class: ", neg_test_arr[0], "Probability: ",
-    #       float(neg_test_arr[0] / total_neg_train_file))
-    # print("Total Number of positive review in neg class: ", neg_test_arr[1], "Probability: ",
-    #       float(neg_test_arr[1] / total_neg_train_file))
-    # pos_test_arr = probability_method(test_pos_file_name, neg_vocabulary, pos_vocabulary,
-    #                                   "movie-review-HW2/aclImdb/test/pos/", training_vocabulary,
-    #                                   total_neg_train_file, total_pos_train_file)
-    # print("Total Number of negative review in pos class: ", pos_test_arr[0], "Probability: ",
-    #       float(pos_test_arr[0] / total_pos_train_file))
-    # print("Total Number of positive review in pos class: ", pos_test_arr[1], "Probability: ",
-    #       float(pos_test_arr[1] / total_pos_train_file))
-    neg_counter_nr = 0
-    pos_counter_nr = 0
-    for i in range(0, len(test_pos_file_name)):
-        neg_class_prob = naive_byes_classifier_bag_of_words_model(neg_vocabulary,
-                                                                  'movie-review-HW2/aclImdb/test/pos/',
-                                                                  test_pos_file_name[i],
-                                                                  sum_of_values(neg_vocabulary),
-                                                                  len(training_vocabulary)) * float(
-            total_neg_train_file / total_train_file)
+    neg_test_arr = probability_method(test_neg_file_name, neg_vocabulary, pos_vocabulary,
+                                      "movie-review-HW2/aclImdb/test/neg/", training_vocabulary,
+                                      total_neg_train_file, total_pos_train_file)
+    print("Total Number of negative review in neg class: ", neg_test_arr[0], "Probability: ",
+          float(neg_test_arr[0] / total_neg_train_file))
+    print("Total Number of positive review in neg class: ", neg_test_arr[1], "Probability: ",
+          float(neg_test_arr[1] / total_neg_train_file))
+    pos_test_arr = probability_method(test_pos_file_name, neg_vocabulary, pos_vocabulary,
+                                      "movie-review-HW2/aclImdb/test/pos/", training_vocabulary,
+                                      total_neg_train_file, total_pos_train_file)
+    print("Total Number of negative review in pos class: ", pos_test_arr[0], "Probability: ",
+          float(pos_test_arr[0] / total_pos_train_file))
+    print("Total Number of positive review in pos class: ", pos_test_arr[1], "Probability: ",
+          float(pos_test_arr[1] / total_pos_train_file))
+    # neg_counter_nr = 0
+    # pos_counter_nr = 0
 
-        pos_class_prob = naive_byes_classifier_bag_of_words_model(pos_vocabulary,
-                                                                  'movie-review-HW2/aclImdb/test/pos/',
-                                                                  test_pos_file_name[i],
-                                                                  sum_of_values(pos_vocabulary),
-                                                                  len(training_vocabulary)) * float(
-            total_pos_train_file / total_train_file)
-
-        if pos_class_prob > neg_class_prob:
-            pos_counter_nr += 1
-        else:
-            neg_counter_nr += 1
-
-    print(neg_counter_nr, pos_counter_nr)
+    # for i in range(0, len(test_pos_file_name)):
+    #     neg_class_prob = naive_byes_classifier_bag_of_words_model(neg_vocabulary,
+    #                                                               'movie-review-HW2/aclImdb/test/pos/',
+    #                                                               test_pos_file_name[i],
+    #                                                               sum_of_values(neg_vocabulary),
+    #                                                               len(training_vocabulary)) + float(
+    #         total_neg_train_file / total_train_file)
+    #
+    #     pos_class_prob = naive_byes_classifier_bag_of_words_model(pos_vocabulary,
+    #                                                               'movie-review-HW2/aclImdb/test/pos/',
+    #                                                               test_pos_file_name[i],
+    #                                                               sum_of_values(pos_vocabulary),
+    #                                                               len(training_vocabulary)) + float(
+    #         total_pos_train_file / total_train_file)
+    #
+    #     if pos_class_prob > neg_class_prob:
+    #         pos_counter_nr += 1
+    #     else:
+    #         neg_counter_nr += 1
+    #
+    # print(neg_counter_nr, pos_counter_nr)
 
 
 # small_training_corpus()

@@ -210,4 +210,5 @@ a = datetime.datetime.now()
 naive_byes_classifier()
 print(datetime.datetime.now() - a)
 
-# python3.6 /home/adnan/source-code/PycharmProjects/NaiveBayesClassifier_NLP/NB.py '/home/adnan/source-code/PycharmProjects/NaiveBayesClassifier_NLP/movie-review-HW2/aclImdb/train /home/adnan/source-code/PycharmProjects/NaiveBayesClassifier_NLP/movie-review-HW2/aclImdb/test /home/adnan/source-code/PycharmProjects/NaiveBayesClassifier_NLP/'
+# PC: python3.6 /home/adnan/source-code/PycharmProjects/NaiveBayesClassifier_NLP/NB.py '/home/adnan/source-code/PycharmProjects/NaiveBayesClassifier_NLP/movie-review-HW2/aclImdb/train /home/adnan/source-code/PycharmProjects/NaiveBayesClassifier_NLP/movie-review-HW2/aclImdb/test /home/adnan/source-code/PycharmProjects/NaiveBayesClassifier_NLP/'
+# LAPTOP: # python3.6 /home/adnanrahin/PycharmProjects/NaiveBayesClassifier_NLP/NB.py '/home/adnanrahin/PycharmProjects/NaiveBayesClassifier_NLP/movie-review-HW2/aclImdb/train /home/adnanrahin/PycharmProjects/NaiveBayesClassifier_NLP/movie-review-HW2/aclImdb/test /home/adnan/source-code/PycharmProjects/NaiveBayesClassifier_NLP/'

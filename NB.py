@@ -13,10 +13,14 @@ import datetime
 # train_write_file = args[2]
 # FILE = open(train_write_file + 'mega_file.txt', "w+")
 
+train_file = '/home/adnanrahin/PycharmProjects/NaiveBayesClassifier_NLP/movie-review-HW2/aclImdb/train'
+test_file = '/home/adnanrahin/PycharmProjects/NaiveBayesClassifier_NLP/movie-review-HW2/aclImdb/test'
+train_write_file = '/home/adnanrahin/PycharmProjects/NaiveBayesClassifier_NLP/'
 
-train_file = '/home/adnan/source-code/PycharmProjects/NaiveBayesClassifier_NLP/movie-review-HW2/aclImdb/train'
-test_file = '/home/adnan/source-code/PycharmProjects/NaiveBayesClassifier_NLP/movie-review-HW2/aclImdb/test'
-train_write_file = '/home/adnan/source-code/PycharmProjects/NaiveBayesClassifier_NLP/'
+# train_file = '/home/adnan/source-code/PycharmProjects/NaiveBayesClassifier_NLP/movie-review-HW2/aclImdb/train'
+# test_file = '/home/adnan/source-code/PycharmProjects/NaiveBayesClassifier_NLP/movie-review-HW2/aclImdb/test'
+# train_write_file = '/home/adnan/source-code/PycharmProjects/NaiveBayesClassifier_NLP/'
+
 FILE = open('prediction_file.txt', "w")
 
 

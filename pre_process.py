@@ -1,27 +1,24 @@
 import os
 import re
-from collections import Counter
 from string import punctuation
 
-
-#  regular expression r'[\s+`=~!@#$%^&*()_+\[\]{};\--\\:"|<,./<>?^]'
-
-def file_name_viewer(file_name):
-    for name in file_name:
-        print(name)
-    print(len(file_name))
+train_file = '/home/adnanrahin/PycharmProjects/NaiveBayesClassifier_NLP/movie-review-HW2/aclImdb/train'
+test_file = '/home/adnanrahin/PycharmProjects/NaiveBayesClassifier_NLP/movie-review-HW2/aclImdb/test'
 
 
-def sum_of_values(dictionary):
-    total = 0
-    for key, values in dictionary.items():
-        total += values
-    return total
-
-
-def dictionary_frequency_viewer(dictionary):
-    for values, key in dictionary.items():
-        print(values, key)
+def write_file(filepath, review, filename):
+    file = open(filename, 'w+')
+    for review_name in review:
+        with open(filepath + review_name, "r") as reviews:
+            review = reviews.read()
+            review = re.sub(r'[`=~!@#$%^&*()_+\[\]{};\\:"|<,./<>?^]', ' ', review)
+            words = review.split()
+            for word in words:
+                word = word.lower()
+                word = word.strip(punctuation)
+                word = word.strip()
+                file.write(word + " ")
+    file.close()
 
 
 def read_all_file_name(filepath):
@@ -32,27 +29,8 @@ def read_all_file_name(filepath):
     return files
 
 
-def set_vocabulary(review, filepath):
-    vocabulary = dict()
-    for review_name in review:
-        with open(filepath + review_name, "r") as reviews:
-            review = reviews.read()
-            review = re.sub(r'[`=~!@#$%^&*()_+\[\]{};\\:"|<,./<>?^]', ' ', review)
-            words = review.split()
-            for word in words:
-                word = word.lower()
-                word = word.strip(punctuation)
-                word = word.strip()
-                if len(word) is not 0:
-                    if word in vocabulary:
-                        vocabulary[word] += 1
-                    else:
-                        vocabulary[word] = 1
-    return vocabulary
+pos_file = read_all_file_name(train_file + '/pos')
+neg_file = read_all_file_name(train_file + '/neg')
 
-
-def merge_vocabulary(vocabulary_1, vocabulary_2):
-    x = Counter(vocabulary_1)
-    y = Counter(vocabulary_2)
-    x.update(y)
-    return dict(x)
+write_file(train_file + '/pos/', pos_file, 'pos_training_file.txt')
+write_file(train_file + '/neg/', neg_file, 'neg_training_file.txt')

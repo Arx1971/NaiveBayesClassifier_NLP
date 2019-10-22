@@ -99,12 +99,12 @@ def small_training_corpus():
 
     comedy_class_log_probabilities = comedy_class[0] + math.log(float(2 / 5), 2)
 
-    output_file.write("Probabilities for Action Class: " + str(action_class[1] * (3 / 5)))
-    output_file.write("Probabilities for Comedy Class: " + str(comedy_class[1] * (2 / 5)))
+    output_file.write("Probabilities for Action Class: " + str(action_class[1] * (3 / 5)) + "\n")
+    output_file.write("Probabilities for Comedy Class: " + str(comedy_class[1] * (2 / 5)) + "\n")
     if action_class_log_probabilities > comedy_class_log_probabilities:
-        output_file.write("Classifier Prediction: Action")
+        output_file.write("Classifier Prediction: Action" + "\n")
     else:
-        output_file.write("Classifier Prediction: Comedy")
+        output_file.write("Classifier Prediction: Comedy" + "\n")
 
 
 def log_probability_method(test_files, neg_vocabulary, pos_vocabulary, filepath, training_vocabulary,

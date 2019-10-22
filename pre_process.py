@@ -2,8 +2,9 @@ import os
 import re
 from string import punctuation
 
-train_file = '/home/adnanrahin/PycharmProjects/NaiveBayesClassifier_NLP/movie-review-HW2/aclImdb/train'
-test_file = '/home/adnanrahin/PycharmProjects/NaiveBayesClassifier_NLP/movie-review-HW2/aclImdb/test'
+train_file = os.getcwd() + '/movie-review-HW2/aclImdb/train'
+test_file = os.getcwd() + '/movie-review-HW2/aclImdb/test'
+small_file = os.getcwd() + '/small_corpus/train/'
 
 
 def write_file(filepath, review, filename):
@@ -34,3 +35,9 @@ neg_file = read_all_file_name(train_file + '/neg')
 
 write_file(train_file + '/pos/', pos_file, 'pos_training_file.txt')
 write_file(train_file + '/neg/', neg_file, 'neg_training_file.txt')
+
+action_file = read_all_file_name(small_file + '/action')
+comedy_file = read_all_file_name(small_file + '/comedy')
+
+write_file(small_file + '/action/', action_file, 'action_training_file.txt')
+write_file(small_file + '/comedy/', comedy_file, 'comedy_training_file.txt')

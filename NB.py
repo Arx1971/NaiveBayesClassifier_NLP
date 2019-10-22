@@ -47,7 +47,7 @@ def set_dictionary(filename):
 
 
 def naive_byes_classifier_bag_of_words_model(vocabulary, filepath, test_review, number_of_word_in_class,
-                                             total_vocabulary_size):
+                                             total_vocabulary_size, file, class_name):
     prob = 0.0
     with open(filepath + test_review, "r") as reviews:
         review = reviews.read()
@@ -58,31 +58,38 @@ def naive_byes_classifier_bag_of_words_model(vocabulary, filepath, test_review, 
             word = word.strip(punctuation)
             word = word.strip()
             if word in vocabulary:
-                prob += math.log(float((vocabulary[word] + 1) / (number_of_word_in_class + total_vocabulary_size)), 2)
+                val = float((vocabulary[word] + 1) / (number_of_word_in_class + total_vocabulary_size))
+                file.write("P(" + word + " | " + class_name + ") = " + str(val) + "\n")
+                prob += math.log(val, 2)
             else:
-                prob += math.log(float((1) / (number_of_word_in_class + total_vocabulary_size)), 2)
+                val = float((1) / (number_of_word_in_class + total_vocabulary_size))
+                file.write("P(" + word + " | " + class_name + ") = " + str(val) + "\n")
+                prob += math.log(val, 2)
 
     return prob
 
 
 def small_training_corpus():
+    file = open('movie-review-small.NB', 'w+')
     small_test_corpus = read_all_file_name("small_corpus/test")
     small_action_corpus_vocabulary = set_dictionary('small_action_train_file.txt')
-    small_comedy_corpus_vocabulary = set_dictionary('small_action_train_file.txt')
+    small_comedy_corpus_vocabulary = set_dictionary('small_comedy_train_file.txt')
     small_corpus_vocabulary = merge_vocabulary(small_action_corpus_vocabulary, small_comedy_corpus_vocabulary)
 
     action_class_prob = naive_byes_classifier_bag_of_words_model(small_action_corpus_vocabulary,
                                                                  "small_corpus/test/",
                                                                  small_test_corpus[0],
                                                                  sum_of_values(small_action_corpus_vocabulary),
-                                                                 len(small_corpus_vocabulary)) + math.log(
+                                                                 len(small_corpus_vocabulary),
+                                                                 file, "Action") + math.log(
         float(3 / 5), 2)
 
     comedy_class_prob = naive_byes_classifier_bag_of_words_model(small_comedy_corpus_vocabulary,
                                                                  "small_corpus/test/",
                                                                  small_test_corpus[0],
                                                                  sum_of_values(small_comedy_corpus_vocabulary),
-                                                                 len(small_corpus_vocabulary)) + math.log(
+                                                                 len(small_corpus_vocabulary),
+                                                                 file, "Comedy") + math.log(
         float(2 / 5), 2)
 
     print("Log Probabilities for Action Class: ", action_class_prob)
@@ -95,6 +102,7 @@ def small_training_corpus():
 
 def probability_method(test_files, neg_vocabulary, pos_vocabulary, filepath, training_vocabulary, total_neg_train_file,
                        total_pos_train_file, original_label):
+    file = open('movie-review-BOW.NB', 'w+')
     neg_counter_nr = 0
     pos_counter_nr = 0
     sum_of_pos_file = sum_of_values(pos_vocabulary)
@@ -106,14 +114,14 @@ def probability_method(test_files, neg_vocabulary, pos_vocabulary, filepath, tra
                                                                   filepath,
                                                                   test_files[i],
                                                                   sum_of_neg_file,
-                                                                  len_of_train) + math.log(
+                                                                  len_of_train, file, '-') + math.log(
             float(total_neg_train_file / total_train_file), 2)
 
         pos_class_prob = naive_byes_classifier_bag_of_words_model(pos_vocabulary,
                                                                   filepath,
                                                                   test_files[i],
                                                                   sum_of_pos_file,
-                                                                  len_of_train) + math.log(
+                                                                  len_of_train, file, '+') + math.log(
             float(total_pos_train_file / total_train_file), 2)
 
         if pos_class_prob > neg_class_prob:
@@ -137,20 +145,10 @@ def naive_byes_classifier():
     neg_test_arr = probability_method(test_neg_file_name, neg_vocabulary, pos_vocabulary,
                                       test_file + "/neg/", vocabulary,
                                       12500, 12500, '-')
-    # print("Total Number of negative review in neg class: ", neg_test_arr[0], "Probability: ",
-    #       float(neg_test_arr[0] / 12500))
-    #
-    # print("Total Number of positive review in neg class: ", neg_test_arr[1], "Probability: ",
-    #       float(neg_test_arr[1] / 12500))
 
     pos_test_arr = probability_method(test_pos_file_name, neg_vocabulary, pos_vocabulary,
                                       test_file + "/pos/", vocabulary,
                                       12500, 12500, '+')
-    # print("Total Number of negative review in pos class: ", pos_test_arr[0], "Probability: ",
-    #       float(pos_test_arr[0] / 12500))
-    #
-    # print("Total Number of positive review in pos class: ", pos_test_arr[1], "Probability: ",
-    #       float(pos_test_arr[1] / 12500))
 
     total_accuracy = float((neg_test_arr[0] + pos_test_arr[1]) /
                            (neg_test_arr[0] + neg_test_arr[1] + pos_test_arr[0] + pos_test_arr[1])) * 100

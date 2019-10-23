@@ -80,6 +80,10 @@ def small_training_corpus():
     small_comedy_corpus_vocabulary = set_dictionary('comedy_training_file.txt')
     small_corpus_vocabulary = merge_vocabulary(small_action_corpus_vocabulary, small_comedy_corpus_vocabulary)
 
+    # print(small_action_corpus_vocabulary)
+    # print(small_comedy_corpus_vocabulary)
+    # print(small_corpus_vocabulary)
+
     action_class = naive_byes_classifier_bag_of_words_model(small_action_corpus_vocabulary,
                                                             "small_corpus/test/",
                                                             small_test_corpus[0],
@@ -149,6 +153,8 @@ def naive_byes_classifier():
     pos_vocabulary = set_dictionary('pos_training_file.txt')
     neg_vocabulary = set_dictionary('neg_training_file.txt')
     vocabulary = merge_vocabulary(neg_vocabulary, pos_vocabulary)
+
+    print(neg_vocabulary)
 
     test_pos_file_name = read_all_file_name(test_file + "/pos")
     test_neg_file_name = read_all_file_name(test_file + "/neg")

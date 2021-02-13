@@ -7,10 +7,11 @@ test_file = os.getcwd() + '/movie-review-HW2/aclImdb/test'
 small_file = os.getcwd() + '/small_corpus/train/'
 
 
-def write_file(filepath, review, filename):
+def write_file(filepath, file_review, filename):
     file = open(filename, 'w+')
-    for review_name in review:
-        with open(filepath + review_name, "r") as reviews:
+    for review_name in file_review:
+
+        with open(filepath + review_name, errors='ignore') as reviews:
             review = reviews.read()
             review = re.sub(r'[`=~!@#$%^&*()_+\[\]{};\\:"|<,./<>?^]', ' ', review)
             words = review.split()
@@ -19,6 +20,7 @@ def write_file(filepath, review, filename):
                 word = word.strip(punctuation)
                 word = word.strip()
                 file.write(word + " ")
+
     file.close()
 
 

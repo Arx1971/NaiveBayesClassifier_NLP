@@ -3,7 +3,7 @@ import os
 import re
 from collections import Counter
 from string import punctuation
-from pre_process import *
+
 import math
 import datetime
 
@@ -32,6 +32,14 @@ def merge_vocabulary(vocabulary_1, vocabulary_2):
     return dict(x)
 
 
+def read_all_file_name(filepath):
+    files = []
+    for i in os.listdir(filepath):
+        if i.endswith(".txt"):
+            files.append(i)
+    return files
+
+
 def set_dictionary(filename):
     dictionary = dict()
     file = open(filename, 'r')
@@ -50,7 +58,7 @@ def naive_byes_classifier_bag_of_words_model(vocabulary, filepath, test_review, 
                                              total_vocabulary_size, file, class_name):
     log_probabilities = 0.0
     prob = 1.0
-    with open(filepath + test_review, "r") as reviews:
+    with open(filepath + test_review, errors='ignore') as reviews:
         review = reviews.read()
         review = re.sub(r'[`=~!@#$%^&*()_+\[\]{};\\:"|<,./<>?^]', ' ', review)
         words = review.split()
